@@ -1,4 +1,4 @@
-package com.example.demo.todo;
+package com.example.demo.todo.domain;
 
 import java.time.Instant;
 import java.util.UUID;

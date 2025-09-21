@@ -1,5 +1,7 @@
-package com.example.demo.todo;
+package com.example.demo.todo.controller;
 
+import com.example.demo.todo.domain.TodoItem;
+import com.example.demo.todo.service.TodoService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
