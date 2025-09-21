@@ -1,5 +1,9 @@
-package com.example.demo.user;
+package com.example.demo.user.controller;
 
+import com.example.demo.user.dto.UserProfileCreateRequest;
+import com.example.demo.user.dto.UserProfileResponse;
+import com.example.demo.user.dto.UserProfileUpdateRequest;
+import com.example.demo.user.service.UserProfileService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

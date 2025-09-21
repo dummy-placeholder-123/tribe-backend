@@ -1,5 +1,6 @@
-package com.example.demo.todo;
+package com.example.demo.todo.service;
 
+import com.example.demo.todo.domain.TodoItem;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
