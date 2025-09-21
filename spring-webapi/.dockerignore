@@ -1,0 +1,13 @@
+# Maven build output
+/target
+
+# IDE configuration
+/.idea
+/.vscode
+
+# Git metadata
+/.git
+.gitignore
+
+# CI configuration caches
+/.mvn
