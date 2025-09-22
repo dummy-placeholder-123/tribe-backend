@@ -7,7 +7,7 @@ on:
   workflow_dispatch:
 
 env:
-  ECR_REPOSITORY: tribe-backend
+  ECR_REPOSITORY: devashish/tribe-backend
   IMAGE_TAG: ${{ github.sha }}
   WORKING_DIRECTORY: spring-webapi
 
