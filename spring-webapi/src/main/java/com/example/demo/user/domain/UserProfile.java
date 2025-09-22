@@ -10,15 +10,18 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
+import jakarta.persistence.OrderColumn;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.PreUpdate;
 import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
 
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 import java.util.UUID;
@@ -73,7 +76,8 @@ public class UserProfile {
     @ElementCollection
     @CollectionTable(name = "user_hobbies", joinColumns = @JoinColumn(name = "user_id"))
     @Column(name = "hobby", length = 64, nullable = false)
-    private Set<String> hobbies = new LinkedHashSet<>();
+    @OrderColumn(name = "hobby_order")
+    private List<String> hobbies = new ArrayList<>();
 
     @ManyToMany
     @JoinTable(
@@ -169,8 +173,8 @@ public class UserProfile {
         return updatedAt;
     }
 
-    public Set<String> getHobbies() {
-        return Collections.unmodifiableSet(hobbies);
+    public List<String> getHobbies() {
+        return Collections.unmodifiableList(hobbies);
     }
 
     public Set<UserProfile> getFriends() {
@@ -214,9 +218,11 @@ public class UserProfile {
         if (hobbies == null) {
             return;
         }
+        LinkedHashSet<String> uniqueHobbies = new LinkedHashSet<>();
         hobbies.stream()
                 .filter(Objects::nonNull)
-                .forEach(this.hobbies::add);
+                .forEach(uniqueHobbies::add);
+        this.hobbies.addAll(uniqueHobbies);
     }
 
     public void synchronizeFriends(Collection<UserProfile> desiredFriends) {
