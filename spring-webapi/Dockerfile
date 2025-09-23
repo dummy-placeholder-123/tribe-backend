@@ -26,4 +26,5 @@ USER spring:spring
 
 # Propagate runtime metadata to the container.
 ENV JAVA_OPTS=""
+ENV SPRING_PROFILES_ACTIVE=test
 ENTRYPOINT ["sh", "-c", "java $JAVA_OPTS -jar /app/app.jar"]
