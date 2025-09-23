@@ -1,18 +1,35 @@
 spring:
+  application:
+    name: spring-webapi-test
+
   datasource:
-    url: jdbc:h2:mem:tribe-test;DB_CLOSE_DELAY=-1;MODE=PostgreSQL
+    url: jdbc:h2:mem:tribe;DB_CLOSE_DELAY=-1;MODE=PostgreSQL
     username: sa
-    password: 
+    password:
     driver-class-name: org.h2.Driver
+
   jpa:
     hibernate:
       ddl-auto: create-drop
-  jackson:
-    property-naming-strategy: SNAKE_CASE
+    open-in-view: false
+    properties:
+      hibernate:
+        jdbc.time_zone: UTC
+        format_sql: true
+
+  h2:
+    console:
+      enabled: false
+
+logging:
+  level:
+    org.springframework: WARN
+    org.hibernate.SQL: DEBUG
+    org.hibernate.type.descriptor.sql: TRACE
 
 app:
   security:
     jwt:
-      secret: test-secret-key-change-me-please-1234567890
+      secret: test-secret-1234567890-almost-32-characters-long!
       access-token-ttl-seconds: 900
       refresh-token-ttl-seconds: 604800

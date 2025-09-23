@@ -1,18 +1,28 @@
 spring:
+  application:
+    name: spring-webapi
+
   datasource:
-    url: ${DATABASE_URL:jdbc:h2:mem:tribe;DB_CLOSE_DELAY=-1;MODE=PostgreSQL}
-    username: ${DATABASE_USERNAME:sa}
-    password: ${DATABASE_PASSWORD:}
-    driver-class-name: org.h2.Driver
+    url: ${DATABASE_URL:jdbc:postgresql://localhost:5432/tribe}
+    username: postgres
+    password: root
+    driver-class-name: org.postgresql.Driver
+
   jpa:
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
     hibernate:
       ddl-auto: update
+    open-in-view: false
     properties:
       hibernate:
+        boot.allow_jdbc_metadata_access: false
+        jdbc.time_zone: UTC
         format_sql: true
+
   h2:
     console:
       enabled: false
+
   jackson:
     property-naming-strategy: SNAKE_CASE
 
