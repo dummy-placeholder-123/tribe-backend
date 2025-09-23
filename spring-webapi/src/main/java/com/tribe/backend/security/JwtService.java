@@ -27,6 +27,7 @@ public class JwtService {
         Instant now = Instant.now();
         Instant expiry = now.plusSeconds(properties.getAccessTokenTtlSeconds());
         return Jwts.builder()
+            .id(UUID.randomUUID().toString())
             .subject(userPrincipal.getId().toString())
             .issuedAt(Date.from(now))
             .expiration(Date.from(expiry))
@@ -40,6 +41,7 @@ public class JwtService {
         Instant now = Instant.now();
         Instant expiry = now.plusSeconds(properties.getAccessTokenTtlSeconds());
         return Jwts.builder()
+            .id(UUID.randomUUID().toString())
             .subject(userId.toString())
             .issuedAt(Date.from(now))
             .expiration(Date.from(expiry))
