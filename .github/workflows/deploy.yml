@@ -31,9 +31,9 @@ jobs:
           cache: maven
           cache-dependency-path: ${{ env.WORKING_DIRECTORY }}/pom.xml
 
-      # - name: Run test suite
-      #   run: mvn -B test
-      #   working-directory: ${{ env.WORKING_DIRECTORY }}
+      - name: Run test suite
+        run: mvn -B test
+        working-directory: ${{ env.WORKING_DIRECTORY }}
 
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v4
