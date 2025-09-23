@@ -23,6 +23,8 @@ import org.springframework.stereotype.Service;
 @Service
 public class UserService {
 
+    private static final int MAX_RECOMMENDATIONS = 50;
+
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
 
@@ -96,11 +98,12 @@ public class UserService {
             candidates.addAll(userRepository.findBySharedInterests(userId, normalizedInterests));
         }
 
+        int cappedLimit = Math.min(limit, MAX_RECOMMENDATIONS);
         return candidates.stream()
             .distinct()
             .map(candidate -> toRecommendation(user, candidate))
             .sorted(Comparator.comparing(UserRecommendationResponse::compatibilityScore).reversed())
-            .limit(limit)
+            .limit(cappedLimit)
             .toList();
     }
 

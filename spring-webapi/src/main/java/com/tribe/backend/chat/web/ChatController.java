@@ -8,6 +8,8 @@ import com.tribe.backend.chat.service.ChatService;
 import com.tribe.backend.common.dto.PageResponse;
 import com.tribe.backend.security.UserPrincipal;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
 import java.util.List;
 import java.util.UUID;
 import org.springframework.http.HttpStatus;
@@ -20,9 +22,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.validation.annotation.Validated;
 
 @RestController
 @RequestMapping("/api/v1/chats")
+@Validated
 public class ChatController {
 
     private final ChatService chatService;
@@ -54,7 +58,8 @@ public class ChatController {
     @GetMapping("/{chatId}/messages")
     public PageResponse<ChatMessageResponse> history(@AuthenticationPrincipal UserPrincipal principal,
                                                      @PathVariable UUID chatId,
-                                                     @RequestParam(defaultValue = "50") int limit,
+                                                     @RequestParam(defaultValue = "50")
+                                                     @Min(1) @Max(100) int limit,
                                                      @RequestParam(required = false) UUID cursor) {
         return chatService.getRecentMessages(chatId, principal.getId(), limit, cursor);
     }

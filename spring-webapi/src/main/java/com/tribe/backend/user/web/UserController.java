@@ -8,11 +8,14 @@ import com.tribe.backend.user.dto.UserUpdateRequest;
 import com.tribe.backend.user.service.UserService;
 import com.tribe.backend.security.UserPrincipal;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
 import java.util.List;
 import java.util.UUID;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -25,6 +28,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api/v1/users")
+@Validated
 public class UserController {
 
     private final UserService userService;
@@ -57,7 +61,8 @@ public class UserController {
     @GetMapping("/{userId}/recommendations")
     @PreAuthorize("#userId == principal.id")
     public PageResponse<UserRecommendationResponse> recommendations(@PathVariable UUID userId,
-                                                                    @RequestParam(defaultValue = "10") int limit,
+                                                                    @RequestParam(defaultValue = "10")
+                                                                    @Min(1) @Max(50) int limit,
                                                                     @AuthenticationPrincipal UserPrincipal principal) {
         List<UserRecommendationResponse> items = userService.getRecommendations(userId, limit);
         return new PageResponse<>(items, null, false);
