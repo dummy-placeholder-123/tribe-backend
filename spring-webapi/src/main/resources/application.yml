@@ -29,6 +29,6 @@ management:
 app:
   security:
     jwt:
-      secret: ${JWT_SECRET:super-secret-development-key-that-should-be-rotated}
+      secret: ${JWT_SECRET:?JWT_SECRET environment variable must be provided}
       access-token-ttl-seconds: 900
       refresh-token-ttl-seconds: 604800
