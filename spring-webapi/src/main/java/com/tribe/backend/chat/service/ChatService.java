@@ -25,10 +25,13 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 @Service
 public class ChatService {
+
+    private static final int MAX_CHAT_PAGE_SIZE = 100;
 
     private final ChatRoomRepository chatRoomRepository;
     private final ChatParticipantRepository participantRepository;
@@ -92,12 +95,23 @@ public class ChatService {
         UserAccount user = userRepository.findById(userId)
             .orElseThrow(() -> new NotFoundException("User not found"));
         ensureParticipant(chatRoom, user);
+        Instant cursorSentAt = null;
+        UUID cursorId = null;
+        if (cursor != null) {
+            ChatMessage cursorMessage = messageRepository.findById(cursor)
+                .filter(message -> message.getChatRoom().getId().equals(chatRoom.getId()))
+                .orElseThrow(() -> new BadRequestException("Invalid cursor"));
+            cursorSentAt = cursorMessage.getSentAt();
+            cursorId = cursorMessage.getId();
+        }
+        int pageSize = Math.min(limit, MAX_CHAT_PAGE_SIZE);
         List<ChatMessageResponse> messages = messageRepository
-            .findRecentMessages(chatRoom, cursor, PageRequest.of(0, limit))
+            .findRecentMessages(chatRoom, cursorSentAt, cursorId,
+                PageRequest.of(0, pageSize, Sort.by(Sort.Direction.DESC, "sentAt", "id")))
             .stream()
             .map(this::toMessageResponse)
             .toList();
-        String nextCursor = messages.size() == limit ? messages.get(messages.size() - 1).id().toString() : null;
+        String nextCursor = messages.size() == pageSize ? messages.get(messages.size() - 1).id().toString() : null;
         return new PageResponse<>(messages, nextCursor, nextCursor != null);
     }
 
