@@ -3,9 +3,9 @@ spring:
     name: spring-webapi
 
   datasource:
-    url: ${DATABASE_URL:jdbc:postgresql://localhost:5432/tribe}
-    username: postgres
-    password: root
+    url: jdbc:postgresql://${DB_HOST}:5432/tribe
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
     driver-class-name: org.postgresql.Driver
 
   jpa:
