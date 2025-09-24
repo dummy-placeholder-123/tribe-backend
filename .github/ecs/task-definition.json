@@ -46,6 +46,9 @@
     },
     "volumes": [],
     "tags": [
-        "latest"
+        {
+            "key": "commit-sha",
+            "value": "REPLACE_COMMIT_SHA"
+          }
     ]
 }
