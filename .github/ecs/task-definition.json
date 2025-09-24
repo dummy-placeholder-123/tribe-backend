@@ -45,5 +45,7 @@
         "operatingSystemFamily": "LINUX"
     },
     "volumes": [],
-    "tags": []
+    "tags": [
+        "latest"
+    ]
 }
