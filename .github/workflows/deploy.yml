@@ -67,10 +67,15 @@ jobs:
       - name: Use repo task definition template
         run: cp .github/ecs/task-definition.json task-def.json
               
-      - name: Update task definition with new image
+      - name: Update task definition with image and commit SHA
         run: |
           NEW_IMAGE="${{ steps.login-ecr.outputs.registry }}/${{ env.ECR_REPOSITORY }}:${{ env.IMAGE_TAG }}"
-          cat task-def.json | jq --arg IMG "$NEW_IMAGE" '.containerDefinitions[0].image = $IMG' > task-def-updated.json
+          COMMIT_SHA="${{ github.sha }}"
+      
+          cat task-def.json | \
+            jq --arg IMG "$NEW_IMAGE" --arg SHA "$COMMIT_SHA" \
+            '.containerDefinitions[0].image = $IMG | .tags[0].value = $SHA' \
+            > task-def-updated.json
 
       - name: Register new task definition revision
         id: register-task-def
