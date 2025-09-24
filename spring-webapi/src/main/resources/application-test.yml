@@ -33,3 +33,8 @@ app:
       secret: test-secret-1234567890-almost-32-characters-long!
       access-token-ttl-seconds: 900
       refresh-token-ttl-seconds: 604800
+
+  endpoint:
+    env:
+      show-values: never  # Redact secrets even when env is exposed
+

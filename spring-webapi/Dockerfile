@@ -8,7 +8,7 @@ WORKDIR /workspace
 COPY pom.xml ./
 # Copy source code and resolve dependencies / build in a single step.
 COPY src ./src
-RUN mvn -B -DskipTests package "-Dspring.profiles.active=test"
+RUN mvn -B -DskipTests package
 
 # Runtime stage: run the application with a slim JRE image.
 FROM eclipse-temurin:17.0.13_11-jre-alpine
