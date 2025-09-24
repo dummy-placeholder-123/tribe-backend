@@ -42,7 +42,7 @@ public class SecurityConfig {
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .exceptionHandling(handler -> handler.authenticationEntryPoint(authenticationEntryPoint))
             .authorizeHttpRequests(registry -> registry
-                .requestMatchers("/actuator/health", "/actuator/info", "/v3/api-docs/**", "/swagger-ui/**").permitAll()
+                .requestMatchers("/actuator/health","/actuator/env", "/actuator/info", "/v3/api-docs/**", "/swagger-ui/**").permitAll()
                 .requestMatchers(HttpMethod.POST, "/api/v1/auth/**").permitAll()
                 .requestMatchers(HttpMethod.POST, "/api/v1/users").permitAll()
                 .anyRequest().authenticated()
