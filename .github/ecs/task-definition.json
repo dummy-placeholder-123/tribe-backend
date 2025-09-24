@@ -15,6 +15,12 @@
                 },
                 "secretOptions": []
             },
+            "secrets": [
+                {
+                  "name": "RDS_CREDS",
+                  "valueFrom": "arn:aws:secretsmanager:us-east-1:289956717103:secret:rds!db-95826388-02a3-4156-bfd8-e95363217793-2rzqTQ"
+                }
+            ],
             "mountPoints": [],
             "name": "alpha",
             "portMappings": [
