@@ -85,10 +85,10 @@ jobs:
           jq \
             --arg USER_ARN "$DB_SECRET_ARN:username::" \
             --arg PASS_ARN "$DB_SECRET_ARN:password::" \
-            '.containerDefinitions[0].secrets = [
-               { "name": "DB_USERNAME", "valueFrom": $USER_ARN },
-               { "name": "DB_PASSWORD", "valueFrom": $PASS_ARN }
-             ]' task-def.json > task-def-updated.json
+            '(.containerDefinitions[0].secrets //= []) += [
+              { "name": "DB_USERNAME", "valueFrom": $USER_ARN },
+              { "name": "DB_PASSWORD", "valueFrom": $PASS_ARN }
+            ]' task-def.json > task-def-updated.json
 
           # creates task defination
           TASK_DEF_ARN=$(aws ecs register-task-definition \
