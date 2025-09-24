@@ -80,6 +80,17 @@ jobs:
       - name: Register new task definition revision
         id: register-task-def
         run: |
+          # Does Serets manager related stuff.
+          export DB_SECRET_ARN=${{ secrets.DB_SECRET_ARN }}
+          jq \
+            --arg USER_ARN "$DB_SECRET_ARN:username::" \
+            --arg PASS_ARN "$DB_SECRET_ARN:password::" \
+            '.containerDefinitions[0].secrets = [
+               { "name": "DB_USERNAME", "valueFrom": $USER_ARN },
+               { "name": "DB_PASSWORD", "valueFrom": $PASS_ARN }
+             ]' task-def.json > task-def-updated.json
+
+          # creates task defination
           TASK_DEF_ARN=$(aws ecs register-task-definition \
             --cli-input-json file://task-def-updated.json \
             --query taskDefinition.taskDefinitionArn \
