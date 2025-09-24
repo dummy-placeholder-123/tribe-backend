@@ -35,10 +35,10 @@ jobs:
         run: mvn -B test
         working-directory: ${{ env.WORKING_DIRECTORY }}
 
-      - name: Run buid mock production package
+      - name: Run build mock production package
         run: mvn -B -DskipTests package "-Dspring.profiles.active=test"
         working-directory: ${{ env.WORKING_DIRECTORY }}
-      
+
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v4
         with:
@@ -63,15 +63,14 @@ jobs:
             ${{ steps.login-ecr.outputs.registry }}/${{ env.ECR_REPOSITORY }}:${{ env.IMAGE_TAG }} \
             ${{ steps.login-ecr.outputs.registry }}/${{ env.ECR_REPOSITORY }}:latest
           docker push ${{ steps.login-ecr.outputs.registry }}/${{ env.ECR_REPOSITORY }}:latest
-          
+
       - name: Use repo task definition template
         run: cp .github/ecs/task-definition.json task-def.json
-              
+
       - name: Update task definition with image and commit SHA
         run: |
           NEW_IMAGE="${{ steps.login-ecr.outputs.registry }}/${{ env.ECR_REPOSITORY }}:${{ env.IMAGE_TAG }}"
           COMMIT_SHA="${{ github.sha }}"
-      
           cat task-def.json | \
             jq --arg IMG "$NEW_IMAGE" --arg SHA "$COMMIT_SHA" \
             '.containerDefinitions[0].image = $IMG | .tags[0].value = $SHA' \
@@ -80,20 +79,18 @@ jobs:
       - name: Register new task definition revision
         id: register-task-def
         run: |
-          # Does Serets manager related stuff.
-          export DB_SECRET_ARN=${{ secrets.DB_SECRET_ARN }}
+          DB_SECRET_ARN="${{ secrets.DB_SECRET_ARN }}"
           jq \
-            --arg USER_ARN "$DB_SECRET_ARN:username::" \
-            --arg PASS_ARN "$DB_SECRET_ARN:password::" \
+            --arg USER_ARN "$DB_SECRET_ARN:SecretString:username::" \
+            --arg PASS_ARN "$DB_SECRET_ARN:SecretString:password::" \
             '.containerDefinitions[0].secrets = [
-            { "name": "DB_USERNAME", "valueFrom": $USER_ARN },
-            { "name": "DB_PASSWORD", "valueFrom": $PASS_ARN }
+              { "name": "DB_USERNAME", "valueFrom": $USER_ARN },
+              { "name": "DB_PASSWORD", "valueFrom": $PASS_ARN }
             ]' \
-            task-def.json > task-def-updated.json
+            task-def-updated.json > task-def-final.json
 
-          # creates task defination
           TASK_DEF_ARN=$(aws ecs register-task-definition \
-            --cli-input-json file://task-def-updated.json \
+            --cli-input-json file://task-def-final.json \
             --query taskDefinition.taskDefinitionArn \
             --output text)
           echo "TASK_DEF_ARN=$TASK_DEF_ARN" >> $GITHUB_ENV
