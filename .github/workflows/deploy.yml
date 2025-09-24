@@ -79,13 +79,14 @@ jobs:
       - name: Register new task definition revision
         id: register-task-def
         run: |
-          SECRET_DB_ARN="${{ secrets.SECRET_DB_ARN }}"
+          DB_USER="${{ secrets.DB_USER }}"
+          DB_PASS="${{ secrets.DB_PASS }}"
           jq \
-            --arg USER_ARN "$SECRET_DB_ARN:SecretString:username::" \
-            --arg PASS_ARN "$SECRET_DB_ARN:SecretString:password::" \
+            --arg USER_ARN "$DB_USER" \
+            --arg PASS_ARN "$DB_PASS" \
             '.containerDefinitions[0].secrets = [
-              { "name": "DB_USERNAME", "valueFrom": $USER_ARN },
-              { "name": "DB_PASSWORD", "valueFrom": $PASS_ARN }
+              { "name": "DB_USERNAME", "from": $USER_ARN },
+              { "name": "DB_PASSWORD", "from": $PASS_ARN }
             ]' \
             task-def-updated.json > task-def-final.json
 
