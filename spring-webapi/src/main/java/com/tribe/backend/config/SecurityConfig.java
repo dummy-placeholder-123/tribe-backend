@@ -2,8 +2,10 @@ package com.tribe.backend.config;
 
 import com.tribe.backend.security.JwtAuthenticationEntryPoint;
 import com.tribe.backend.security.JwtAuthenticationFilter;
+import org.springframework.boot.actuate.autoconfigure.security.servlet.EndpointRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
@@ -11,6 +13,7 @@ import org.springframework.security.authentication.dao.DaoAuthenticationProvider
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -34,15 +37,28 @@ public class SecurityConfig {
         this.userDetailsService = userDetailsService;
     }
 
+//    @Bean
+//    @Order(1)
+//    public SecurityFilterChain actuatorSecurityFilterChain(HttpSecurity http) throws Exception {
+//        // Dedicated chain keeps actuator endpoints accessible without JWT interception.
+//        return http
+//            .securityMatcher(EndpointRequest.toAnyEndpoint())
+//            .csrf(AbstractHttpConfigurer::disable)
+//            .authorizeHttpRequests(registry -> registry.anyRequest().permitAll())
+//            .build();
+//    }
+
     @Bean
+    @Order(2)
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+        // Primary API chain retains JWT enforcement for all other requests.
         return http
             .csrf(csrf -> csrf.disable())
             .cors(cors -> {})
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .exceptionHandling(handler -> handler.authenticationEntryPoint(authenticationEntryPoint))
             .authorizeHttpRequests(registry -> registry
-                .requestMatchers("/actuator/health","/actuator/env", "/actuator/info", "/v3/api-docs/**", "/swagger-ui/**").permitAll()
+                .requestMatchers("/actuator/health", "/actuator/env", "/actuator/info", "/v3/api-docs/**", "/swagger-ui/**").permitAll()
                 .requestMatchers(HttpMethod.POST, "/api/v1/auth/**").permitAll()
                 .requestMatchers(HttpMethod.POST, "/api/v1/users").permitAll()
                 .anyRequest().authenticated()
