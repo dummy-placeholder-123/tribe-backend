@@ -15,7 +15,7 @@
                 },
                 "secretOptions": []
             },
-            "secrets": [
+            "environment": [
                 {
                     "name": "DB_USERNAME",
                     "value": ""

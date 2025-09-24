@@ -84,7 +84,7 @@ jobs:
           jq \
             --arg USER_ARN "$DB_USER" \
             --arg PASS_ARN "$DB_PASS" \
-            '.containerDefinitions[0].secrets = [
+            '.containerDefinitions[0].environment = [
               { "name": "DB_USERNAME", "from": $USER_ARN },
               { "name": "DB_PASSWORD", "from": $PASS_ARN }
             ]' \
