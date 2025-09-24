@@ -88,7 +88,7 @@ jobs:
               { "name": "DB_USERNAME", "from": $USER_ARN },
               { "name": "DB_PASSWORD", "from": $PASS_ARN }
             ]' \
-            task-def-updated.json > task-def-final.json
+            task-def.json > task-def-final.json
 
           TASK_DEF_ARN=$(aws ecs register-task-definition \
             --cli-input-json file://task-def-final.json \
