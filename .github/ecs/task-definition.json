@@ -18,11 +18,11 @@
             "secrets": [
                 {
                     "name": "DB_USERNAME",
-                    "valueFrom": ""
+                    "value": ""
                   },
                   {
                     "name": "DB_PASSWORD",
-                    "valueFrom": ""
+                    "value": ""
                   }
             ],
             "mountPoints": [],
