@@ -4,7 +4,7 @@
             "cpu": 0,
             "environment": [],
             "essential": true,
-            "image": "289956717103.dkr.ecr.us-east-1.amazonaws.com/devashish/tribe-backend@sha256:bf5eaf45b871129949e14ba73d5997880e9a2e214fbe230c4c9846906a6b1111",
+            "image": "",
             "logConfiguration": {
                 "logDriver": "awslogs",
                 "options": {
@@ -48,7 +48,7 @@
     "networkMode": "awsvpc",
     "placementConstraints": [],
     "requiresCompatibilities": [
-        "FARGATE"
+        "EC2"
     ],
     "runtimePlatform": {
         "cpuArchitecture": "X86_64",
