@@ -23,8 +23,8 @@ spring:
     console:
       enabled: false
 
-  jackson:
-    property-naming-strategy: SNAKE_CASE
+#  jackson:
+#    property-naming-strategy: SNAKE_CASE
 
 logging:
   level:
@@ -34,7 +34,7 @@ management:
   endpoints:
     web:
       exposure:
-        include: health,info,env
+        include: "*"
   endpoint:
     env:
       show-values: never  # Redact secrets even when env is exposed
@@ -44,6 +44,6 @@ app:
   security:
     jwt:
       secret: ${JWT_SECRET:?JWT_SECRET environment variable must be provided}
-      access-token-ttl-seconds: 900
+      access-token-ttl-seconds: 259200
       refresh-token-ttl-seconds: 604800
 
