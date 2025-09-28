@@ -80,12 +80,14 @@ public class UserService {
         return toProfile(userRepository.save(user));
     }
 
+    @Transactional
     public UserProfileResponse getProfile(UUID userId) {
         return userRepository.findById(userId)
             .map(this::toProfile)
             .orElseThrow(() -> new NotFoundException("User not found"));
     }
 
+    @Transactional
     public List<UserRecommendationResponse> getRecommendations(UUID userId, int limit) {
         UserAccount user = userRepository.findById(userId)
             .orElseThrow(() -> new NotFoundException("User not found"));
